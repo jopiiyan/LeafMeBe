@@ -37,7 +37,7 @@ export default function TabLayout() {
         tabBarInactiveTintColor: "gray", // gray when not selected
         tabBarBackground: () => (
           <BlurView
-            intensity={30} // adjust blur strength (40–100 looks best)
+            intensity={20} // adjust blur strength (40–100 looks best)
             tint="light" // "light" | "dark" | "default"
             style={{ flex: 1, borderRadius: 25 }}
           />

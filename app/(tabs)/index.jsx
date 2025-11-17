@@ -12,7 +12,8 @@ import {
   SegmentedButtons,
   Text,
 } from "react-native-paper";
-import TotalWater from "../components/total_water";
+import SummaryChart from "../components/SummaryChart";
+import TotalWater from "../components/totalWater";
 
 export default function HomeScreen() {
   const water_dispensed = ["50", "100", "150"];
@@ -26,7 +27,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/water/sum")
+      .get("http://192.168.10.118:8000/api/water/sum")
       .then((res) => {
         settotalWater(res.data);
       })
@@ -35,7 +36,7 @@ export default function HomeScreen() {
 
   const handleSubmit = () => {
     axios
-      .post("http://localhost:8000/api/water/insert", water_data)
+      .post("http://192.168.10.118:8000/api/water/insert", water_data)
       .then(() => {
         setSuccess(true);
         setWater("");
@@ -55,12 +56,12 @@ export default function HomeScreen() {
   if (Success) {
     return (
       <LinearGradient
-        colors={["#56f4cdff", "#000000ff"]}
+        colors={["#0648ffff", "#000000ff"]}
         start={{ x: 1, y: -0.5 }}
         end={{ x: 1, y: 1 }}
         style={[styles.container, styles.centered]}
       >
-        <Ionicons name="checkmark-circle" size={100} color="#51FFD6" />
+        <Ionicons name="checkmark-circle" size={100} color="#0648ffff" />
         <Text variant="headlineMedium" style={styles.successText}>
           Dispense Successful!
         </Text>
@@ -150,7 +151,8 @@ export default function HomeScreen() {
 
           {/* Total water */}
           <TotalWater total={totalWater} />
-        
+          <SummaryChart></SummaryChart>
+          <View style={{ height: 80 }} />
         </ScrollView>
       </LinearGradient>
 
@@ -160,67 +162,70 @@ export default function HomeScreen() {
           visible={showDialog}
           onDismiss={() => setShowDialog(false)}
           style={{
-            backgroundColor: "#1a1a1a", // dark card background
-            borderRadius: 20,
+            position: "absolute",
+            bottom: -20,
+            left: -35,
+            right: -35,
+            margin: 0,
+            backgroundColor: "transparent",
+            padding: 0,
           }}
         >
-          <Dialog.Title
+          <View
             style={{
-              color: "white", // bright green accent
-              fontWeight: "bold",
-              textAlign: "center",
+              backgroundColor: "transparent",
+              paddingVertical: 20,
+              borderRadius: 25,
+              width: "100%",
+              paddingHorizontal: 0,
             }}
           >
-            Confirm Sign Out
-          </Dialog.Title>
-
-          <Dialog.Content>
-            <Text
+            {/* Log Out */}
+            <Button
+              mode="contained"
+              onPress={handleSignOut}
               style={{
-                color: "#cfcfcf", // light grey text
-                textAlign: "center",
-                fontSize: 16,
-                lineHeight: 22,
+                marginHorizontal: 20,
+                marginTop: 10,
+                borderRadius: 12,
+                backgroundColor: "#2c2c2e",
+                borderWidth: 1,
+              }}
+              contentStyle={{
+                width: "100%",
+              }}
+              labelStyle={{
+                fontSize: 18,
+                fontWeight: "700",
+                color: "#de3232ff",
               }}
             >
-              Are you sure you want to sign out?
-            </Text>
-          </Dialog.Content>
+              Log Out
+            </Button>
 
-          <Dialog.Actions
-            style={{
-              justifyContent: "space-around",
-              marginBottom: 5,
-            }}
-          >
+            {/* Cancel */}
             <Button
+              mode="contained"
               onPress={() => setShowDialog(false)}
-              mode="outlined"
-              textColor="#56f4cdff"
               style={{
-                borderColor: "#00c97f",
-                borderWidth: 1,
-                borderRadius: 10,
-                width: 120,
+                marginHorizontal: 20,
+                marginTop: 3,
+
+                borderRadius: 12,
+                backgroundColor: "#2c2c2e",
               }}
-              labelStyle={{ fontWeight: "bold" }}
+              contentStyle={{
+                width: "100%",
+              }}
+              labelStyle={{
+                fontSize: 18,
+                fontWeight: "900",
+                color: "#548affff",
+              }}
             >
               Cancel
             </Button>
-
-            <Button
-              onPress={handleSignOut}
-              mode="contained"
-              style={{
-                backgroundColor: "#39c5a2ff",
-                borderRadius: 10,
-                width: 120,
-              }}
-              labelStyle={{ color: "#000", fontWeight: "bold" }}
-            >
-              Sign Out
-            </Button>
-          </Dialog.Actions>
+          </View>
         </Dialog>
       </Portal>
     </>
@@ -229,6 +234,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
+  container_log_out: { flex: 1, padding: 0 },
   scrollContent: { gap: 30, marginTop: 70 },
   header: {
     flexDirection: "row",
@@ -257,7 +263,7 @@ const styles = StyleSheet.create({
   successSub: { color: "#ccc", marginTop: 10, textAlign: "center" },
   closeButton: {
     marginTop: 30,
-    backgroundColor: "#51FFD6",
+    backgroundColor: "#0648ffff",
     borderRadius: 10,
     paddingHorizontal: 30,
   },

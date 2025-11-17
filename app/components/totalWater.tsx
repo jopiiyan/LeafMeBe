@@ -16,7 +16,9 @@ export default function TotalWater({ total }: TotalWaterProps) {
       <View style={styles.row_container}>
         <FontAwesome5 name="water" size={45} color="#0044ff" />
         <View>
-          <Text style={styles.waterInfo}>{total.Sum} ML</Text>
+          <Text style={styles.waterInfo}>
+            {total.Sum === null ? 0 : total.Sum} ML
+          </Text>
         </View>
       </View>
     </View>
