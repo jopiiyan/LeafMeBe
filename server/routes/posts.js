@@ -38,6 +38,29 @@ router.get("/sum", (req, res) => {
   });
 });
 
+router.get("/weekly", (req, res) => {
+  const sql = `
+ SELECT
+  SUBSTRING(created_at, 1, 10) AS day,
+  SUM(Water) AS total_water
+FROM WaterIn
+WHERE YEARWEEK(SUBSTRING(created_at, 1, 10), 2) =
+      YEARWEEK(CURDATE(), 2) + ?
+GROUP BY day
+ORDER BY day;
+
+`;
+
+  const offset = Number(req.query.offset || 0);
+
+  db.query(sql, [offset], (err, result) => {
+    if (err) {
+      return res.json(err);
+    }
+    res.json(result);
+  });
+});
+
 router.get("/latest", (req, res) => {
   const sql = "SELECT Water FROM WaterIn ORDER BY id DESC LIMIT 1 ";
   db.query(sql, (err, result) => {
