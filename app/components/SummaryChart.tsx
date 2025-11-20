@@ -60,10 +60,16 @@ function getWeekLabel(offset: number) {
   return "";
 }
 
-export default function SummaryChart() {
+export default function SummaryChart({
+  prop = "Highlights",
+}: {
+  prop: string;
+}) {
   const [weekOffset, setWeekOffset] = useState(0);
   const [values, setValues] = useState<ChartItem[]>([]);
   const [chartKey, setChartKey] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
   const MAX_OFFSET = 0; // can't go to future
   const MIN_OFFSET = -2; // only 2 weeks back
 
@@ -110,9 +116,10 @@ export default function SummaryChart() {
 
         const weekNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-        const chartData = cleaned.map((item) => ({
+        const chartData = cleaned.map((item, index) => ({
           value: item.value,
           label: weekNames[new Date(item.date).getDay()],
+          onPress: () => setSelectedIndex(index),
         }));
 
         setValues(chartData);
@@ -123,95 +130,128 @@ export default function SummaryChart() {
   }, [weekOffset]);
 
   return (
-    <View
-      style={{
-        padding: 20,
-        backgroundColor: "#222",
-        borderRadius: 20,
-        shadowColor: "#00e676",
-        shadowOpacity: 0.15,
-        shadowOffset: { width: 0, height: 4 },
-        shadowRadius: 8,
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <View>
-        <Text
+    <View style={{ gap: 10 }}>
+      <Text
+        style={{
+          fontWeight: "900",
+          fontSize: 25,
+          color: "white",
+        }}
+      >
+        {prop}
+      </Text>
+      <View
+        style={{
+          padding: 20,
+          backgroundColor: "#222",
+          borderRadius: 20,
+          shadowColor: "#00e676",
+          shadowOpacity: 0.15,
+          shadowOffset: { width: 0, height: 4 },
+          shadowRadius: 8,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <View>
+          <Text
+            style={{
+              color: "#C7C7C7",
+              fontSize: 15,
+              fontWeight: "bold",
+              marginBottom: 10,
+            }}
+          >
+            Weekly Water Saved
+          </Text>
+          <Text style={{ color: "#C7C7C7", fontSize: 15, fontWeight: "bold" }}>
+            {weekOffset === -2
+              ? `${formatDate(Weeks.start)}– ${formatDate(Weeks.end)}`
+              : `${title} (${formatDate(Weeks.start)}– ${formatDate(
+                  Weeks.end
+                )})`}
+          </Text>
+        </View>
+        <View
           style={{
-            color: "#C7C7C7",
-            fontSize: 15,
-            fontWeight: "bold",
+            width: "100%",
+            alignItems: "center", // center horizontally
+            justifyContent: "center",
+            marginTop: 10,
             marginBottom: 10,
           }}
         >
-          Weekly Water Saved
-        </Text>
-        <Text style={{ color: "#C7C7C7", fontSize: 15, fontWeight: "bold" }}>
-          {weekOffset === -2
-            ? `${formatDate(Weeks.start)}– ${formatDate(Weeks.end)}`
-            : `${title} (${formatDate(Weeks.start)}– ${formatDate(Weeks.end)})`}
-        </Text>
-      </View>
-      <View
-        style={{
-          width: "100%",
-          alignItems: "center", // center horizontally
-          justifyContent: "center",
-          marginTop: 10,
-          marginBottom: 10,
-        }}
-      >
-        <BarChart
-          key={chartKey}
-          data={values}
-          barWidth={26}
-          barBorderRadius={8}
-          noOfSections={5}
-          spacing={15}
-          frontColor="#0648ffff"
-          barStyle={{ borderRadius: 10 }}
-          animationDuration={300}
-          xAxisLabelTextStyle={{
-            color: "#d0d0d0",
-            fontSize: 13,
-            fontWeight: "500",
-          }}
-          isAnimated
-          yAxisColor="rgba(255,255,255,0.15)"
-          yAxisTextStyle={{ color: "#aaa", fontSize: 12 }}
-          rulesColor="rgba(255,255,255,0.1)"
-          dashGap={2}
-          dashWidth={3}
-        />
-      </View>
+          <BarChart
+            key={chartKey}
+            data={values}
+            barWidth={26}
+            barBorderRadius={8}
+            noOfSections={3}
+            spacing={15}
+            frontColor="#0648ffff"
+            barStyle={{ borderRadius: 10 }}
+            animationDuration={300}
+            xAxisLabelTextStyle={{
+              color: "#d0d0d0",
+              fontSize: 13,
+              fontWeight: "500",
+            }}
+            isAnimated
+            yAxisColor="rgba(255,255,255,0.15)"
+            yAxisTextStyle={{ color: "#aaa", fontSize: 12 }}
+            rulesColor="rgba(255,255,255,0.1)"
+            dashGap={2}
+            dashWidth={3}
+            yAxisExtraHeight={40}
+            minHeight={1}
+            renderTooltip={(item: { value: number }, index: number) => {
+              if (index !== selectedIndex) return null;
+              return (
+                <View
+                  style={{
+                    paddingVertical: 4,
+                    paddingHorizontal: 8,
+                    borderRadius: 6,
+                    backgroundColor: "#1f1f1f",
+                    borderWidth: 1,
+                    borderColor: "#00c97f",
+                  }}
+                >
+                  <Text style={{ color: "white", fontWeight: "600" }}>
+                    {item.value} ml
+                  </Text>
+                </View>
+              );
+            }}
+          />
+        </View>
 
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          marginTop: 10,
-        }}
-      >
-        {" "}
-        <FontAwesome6
-          name="circle-arrow-left"
-          size={35}
-          color="#C7C7C7"
-          onPress={() => {
-            if (weekOffset > MIN_OFFSET) setWeekOffset(weekOffset - 1);
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 10,
           }}
-        />
-        <FontAwesome6
-          name="circle-arrow-right"
-          size={35}
-          color="#C7C7C7"
-          disabled={weekOffset === 0}
-          onPress={() => {
-            if (weekOffset < MAX_OFFSET) setWeekOffset(weekOffset + 1);
-          }}
-        />
+        >
+          <FontAwesome6
+            name="circle-arrow-left"
+            size={35}
+            color="#C7C7C7"
+            onPress={() => {
+              if (weekOffset > MIN_OFFSET) setWeekOffset(weekOffset - 1);
+            }}
+          />
+          <FontAwesome6
+            name="circle-arrow-right"
+            size={35}
+            color="#C7C7C7"
+            disabled={weekOffset === 0}
+            onPress={() => {
+              if (weekOffset < MAX_OFFSET) setWeekOffset(weekOffset + 1);
+            }}
+          />
+        </View>
       </View>
     </View>
   );

@@ -1,4 +1,5 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { BlurView } from "expo-blur";
 import { Tabs } from "expo-router";
@@ -54,11 +55,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="devices"
         options={{
           title: "Profile",
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="account-circle" size={30} color={color} />
+            <MaterialIcons name="devices" size={30} color={color} />
           ),
         }}
       />

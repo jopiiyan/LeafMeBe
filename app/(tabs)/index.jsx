@@ -4,16 +4,14 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
-import {
-  Button,
-  Dialog,
-  Portal,
-  SegmentedButtons,
-  Text,
-} from "react-native-paper";
+import { Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Button, SegmentedButtons, Text } from "react-native-paper";
+import { articlesData } from "../Articles/Articlecontent";
+import Article from "../components/Article";
 import SummaryChart from "../components/SummaryChart";
 import TotalWater from "../components/totalWater";
+
+const plant = require("../../assets/images/plants.png");
 
 export default function HomeScreen() {
   const water_dispensed = ["50", "100", "150"];
@@ -83,6 +81,7 @@ export default function HomeScreen() {
 
   return (
     <>
+      <View></View>
       <LinearGradient
         colors={["#00c97f", "#0044ff", "#000000"]}
         locations={[0, 0.3, 0.4]}
@@ -151,83 +150,99 @@ export default function HomeScreen() {
 
           {/* Total water */}
           <TotalWater total={totalWater} />
+
           <SummaryChart></SummaryChart>
+          <View>
+            <Text
+              style={{
+                fontSize: 25,
+                fontWeight: "900",
+                marginBottom: 1,
+                color: "white",
+              }}
+            >
+              Articles
+            </Text>
+            {articlesData.map((a) => (
+              <Article key={a.id} article={a} />
+            ))}
+          </View>
+
           <View style={{ height: 80 }} />
         </ScrollView>
       </LinearGradient>
 
       {/* Sign-out confirmation dialog */}
-      <Portal>
-        <Dialog
-          visible={showDialog}
-          onDismiss={() => setShowDialog(false)}
-          style={{
-            position: "absolute",
-            bottom: -20,
-            left: -35,
-            right: -35,
-            margin: 0,
-            backgroundColor: "transparent",
-            padding: 0,
-          }}
-        >
+
+      <Modal
+        visible={showDialog}
+        animationType="slide"
+        presentationStyle="overFullScreen"
+        transparent={true}
+        onRequestClose={() => setShowDialog(false)}
+      >
+        {/* Bottom sheet container */}
+
+        <Pressable onPress={() => setShowDialog(false)}>
           <View
             style={{
               backgroundColor: "transparent",
-              paddingVertical: 20,
-              borderRadius: 25,
-              width: "100%",
-              paddingHorizontal: 0,
+              height: "730",
+            }}
+          ></View>
+        </Pressable>
+
+        <View
+          style={{
+            backgroundColor: "transparent",
+            paddingVertical: 20,
+            borderTopLeftRadius: 25,
+            borderTopRightRadius: 25,
+            marginRight: -15,
+            marginLeft: -15,
+          }}
+        >
+          {/* Log Out */}
+          <Button
+            mode="contained"
+            onPress={handleSignOut}
+            style={{
+              marginHorizontal: 20,
+              borderRadius: 12,
+              backgroundColor: "#2c2c2e",
+              borderWidth: 1,
+            }}
+            contentStyle={{ width: "100%" }}
+            labelStyle={{
+              fontSize: 18,
+              fontWeight: "700",
+              color: "#de3232ff",
             }}
           >
-            {/* Log Out */}
-            <Button
-              mode="contained"
-              onPress={handleSignOut}
-              style={{
-                marginHorizontal: 20,
-                marginTop: 10,
-                borderRadius: 12,
-                backgroundColor: "#2c2c2e",
-                borderWidth: 1,
-              }}
-              contentStyle={{
-                width: "100%",
-              }}
-              labelStyle={{
-                fontSize: 18,
-                fontWeight: "700",
-                color: "#de3232ff",
-              }}
-            >
-              Log Out
-            </Button>
+            Log Out
+          </Button>
 
-            {/* Cancel */}
-            <Button
-              mode="contained"
-              onPress={() => setShowDialog(false)}
-              style={{
-                marginHorizontal: 20,
-                marginTop: 3,
-
-                borderRadius: 12,
-                backgroundColor: "#2c2c2e",
-              }}
-              contentStyle={{
-                width: "100%",
-              }}
-              labelStyle={{
-                fontSize: 18,
-                fontWeight: "900",
-                color: "#548affff",
-              }}
-            >
-              Cancel
-            </Button>
-          </View>
-        </Dialog>
-      </Portal>
+          {/* Cancel */}
+          <Button
+            mode="contained"
+            onPress={() => setShowDialog(false)}
+            style={{
+              marginHorizontal: 20,
+              marginTop: 10,
+              borderRadius: 12,
+              backgroundColor: "#2c2c2e",
+            }}
+            contentStyle={{ width: "100%" }}
+            labelStyle={{
+              fontSize: 18,
+              fontWeight: "900",
+              color: "#548affff",
+            }}
+          >
+            Cancel
+          </Button>
+        </View>
+      </Modal>
     </>
   );
 }
