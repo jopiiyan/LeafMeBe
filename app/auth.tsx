@@ -1,19 +1,19 @@
 import { useAuth } from "@/lib/auth-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 import { Button, Text, TextInput, useTheme } from "react-native-paper";
 
 export default function AuthScreen() {
-  const [isSignUp, setIsSignup] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPass, setconfirmPass] = useState<string>("");
+  const [isSignUp, setIsSignup] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPass, setconfirmPass] = useState("");
   const [error, setError] = useState<string | null>(null);
+
   const router = useRouter();
-
   const theme = useTheme();
-
   const { signIn, signUp } = useAuth();
 
   const handleAuth = async () => {
@@ -44,132 +44,146 @@ export default function AuthScreen() {
         return;
       }
     }
+
     router.replace("./(tabs)");
   };
 
-  const handleSwitchMode = () => {
-    setIsSignup((prev) => !prev);
-  };
-
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <LinearGradient
+      colors={["#00c97f", "#0648ff", "#000000"]}
+      locations={[0, 0.35, 0.6]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
       style={styles.container}
     >
-      {" "}
-      <View style={styles.content}>
-        <Text style={styles.title} variant="headlineMedium">
-          {isSignUp ? "Create Account" : "Welcome Back!"}{" "}
-        </Text>
-        <TextInput
-          label="Email"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          placeholder="example@gmail.com"
-          mode="outlined"
-          style={styles.input}
-          onChangeText={setEmail}
-          theme={{
-            colors: {
-              primary: "#0e7e64ff",
-              background: "#E0F2F1",
-              outline: "#0e7e64ff",
-            },
-          }}
-        ></TextInput>
-        <TextInput
-          label="Password"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          mode="outlined"
-          style={styles.input}
-          onChangeText={setPassword}
-          secureTextEntry
-          theme={{
-            colors: {
-              primary: "#0e7e64ff",
-              background: "#E0F2F1",
-              outline: "#0e7e64ff",
-            },
-          }}
-        ></TextInput>
-        {isSignUp && (
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <View style={styles.content}>
+          <Text style={styles.title}>
+            {isSignUp ? "Create Account" : "Log In to Leafmebe"}
+          </Text>
+
+          {/* Email */}
           <TextInput
-            label="Confirm Password"
+            label="Email"
+            placeholder="example@gmail.com"
             autoCapitalize="none"
             keyboardType="email-address"
             mode="outlined"
             style={styles.input}
-            onChangeText={setconfirmPass}
-            secureTextEntry
+            onChangeText={setEmail}
             theme={{
               colors: {
-                primary: "#0e7e64ff",
-                background: "#E0F2F1",
-                outline: "#0e7e64ff",
+                primary: "#00c97f",
+                background: "#1e1e1e",
+                outline: "#0648ff",
+                text: "#fff",
+                onSurface: "#fff",
               },
             }}
-          ></TextInput>
-        )}
+          />
 
-        {error && <Text style={{ color: theme.colors.error }}>{error}</Text>}
-        <Button
-          mode="contained"
-          onPress={handleAuth}
-          style={styles.button}
-          theme={{
-            colors: {
-              primary: "#0e7e64ff",
-              outline: "#0e7e64ff",
-            },
-          }}
-        >
-          {isSignUp ? "Sign Up" : "Sign In"}
-        </Button>
+          {/* Password */}
+          <TextInput
+            label="Password"
+            autoCapitalize="none"
+            secureTextEntry
+            mode="outlined"
+            style={styles.input}
+            onChangeText={setPassword}
+            theme={{
+              colors: {
+                primary: "#00c97f",
+                background: "#1e1e1e",
+                outline: "#0648ff",
+                text: "#fff",
+                onSurface: "#fff",
+            
+              },
+            }}
+          />
 
-        <Button
-          mode="text"
-          onPress={handleSwitchMode}
-          theme={{
-            colors: {
-              primary: "#0e7e64ff",
-              outline: "#0e7e64ff",
-            },
-          }}
-        >
-          {isSignUp
-            ? "Already have an account? Sign In"
-            : "Dont have an account? Sign Up"}
-        </Button>
-      </View>
-    </KeyboardAvoidingView>
+          {/* Confirm Password (Sign Up Mode) */}
+          {isSignUp && (
+            <TextInput
+              label="Confirm Password"
+              autoCapitalize="none"
+              secureTextEntry
+              mode="outlined"
+              style={styles.input}
+              onChangeText={setconfirmPass}
+              theme={{
+                colors: {
+                  primary: "#00c97f",
+                  background: "#1e1e1e",
+                  outline: "#0648ff",
+                  text: "#fff",
+                  onSurface: "#fff",
+                },
+              }}
+            />
+          )}
+
+          {error && <Text style={styles.errorText}>{error}</Text>}
+
+          {/* Main Button */}
+          <Button
+            mode="contained"
+            onPress={handleAuth}
+            style={styles.authButton}
+            contentStyle={{ paddingVertical: 6 }}
+            labelStyle={{ color: "white", fontWeight: "bold" }}
+          >
+            {isSignUp ? "Sign Up" : "Sign In"}
+          </Button>
+
+          {/* Switch Mode */}
+          <Button
+            mode="text"
+            onPress={() => setIsSignup((prev) => !prev)}
+            labelStyle={{ color: "#00c97f", fontWeight: "600" }}
+          >
+            {isSignUp
+              ? "Already have an account? Sign In"
+              : "Don't have an account? Sign Up"}
+          </Button>
+        </View>
+      </KeyboardAvoidingView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
   },
   content: {
     flex: 1,
-    padding: 16,
+    padding: 20,
     justifyContent: "center",
+    gap: 10,
   },
   title: {
-    textAlign: "center",
-    marginBottom: 24,
-    fontWeight: "bold",
-    fontSize: 35,
-    color: "#014535ff",
+    fontSize: 30,
+    fontWeight: "900",
+    color: "#ffffff",
+    marginBottom: 20,
   },
   input: {
-    marginBottom: 16,
+    marginBottom: 12,
+    borderRadius: 10,
+    color: "white",
   },
-  button: {
-    marginTop: 8,
+  authButton: {
+    marginTop: 10,
+    borderRadius: 25,
+    backgroundColor: "#0648ff",
   },
-  switchModeButton: {
-    marginTop: 16,
+  errorText: {
+    color: "#ff4f4f",
+    marginBottom: 8,
+    fontWeight: "600",
   },
 });
