@@ -40,6 +40,22 @@ export default function HomeScreen() {
       .catch((err) => console.log(err));
   }, [Success]);
 
+  useEffect(() => {
+    axios
+      .get("https://leafmebe-1.onrender.com/api/water/device-state")
+      .then((res) => {
+        const data = res.data;
+        console.log("Loaded device state:", data);
+
+        // restore segmented button
+        setWater(data.target_ml?.toString() ?? "");
+
+        // restore daily watering switch
+        setDailyWatering(data.daily_watering === 1);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   const handleSubmit = () => {
     axios
       .put(
@@ -149,7 +165,13 @@ export default function HomeScreen() {
                       surface: "#333333",
                     },
                   }}
-                  onValueChange={(value) => setWater(value)}
+                  onValueChange={(value) => {
+                    setWater(value);
+                    axios.put(
+                      "https://leafmebe-1.onrender.com/api/water/device-state/target",
+                      { target_ml: Number(value) }
+                    );
+                  }}
                   buttons={water_dispensed.map((water) => ({
                     value: water,
                     label: water,
@@ -172,17 +194,22 @@ export default function HomeScreen() {
 
                 <Button
                   mode="contained"
-                  disabled={!Water}
+                  disabled={dailyWatering || !Water}
                   onPress={handleSubmit}
                   labelStyle={{ color: "#fff", fontWeight: "bold" }}
                   style={
-                    !Water
+                    dailyWatering || !Water
                       ? { borderRadius: 25, backgroundColor: "grey" }
                       : { borderRadius: 25, backgroundColor: "#0044ff" }
                   }
                 >
-                  Dispense
+                  Manual Dispense
                 </Button>
+                {dailyWatering && (
+                  <Text style={{ color: "#aaa" }}>
+                    Daily watering is active — manual watering is disabled.
+                  </Text>
+                )}
               </View>
             </View>
           </View>

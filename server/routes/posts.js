@@ -69,6 +69,25 @@ router.get("/sum", (req, res) => {
   });
 });
 
+//app update the ml
+router.put("/device-state/target", (req, res) => {
+  const { target_ml } = req.body;
+
+  if (!target_ml || isNaN(target_ml)) {
+    return res.status(400).json({ error: "Invalid target_ml value" });
+  }
+
+  const sql = "UPDATE device_state SET target_ml = ? WHERE id = 1";
+
+  db.query(sql, [target_ml], (err, result) => {
+    if (err) {
+      console.error("SQL error:", err);
+      return res.status(500).json({ error: "Database update failed" });
+    }
+    res.json(result);
+  });
+});
+
 //app retreive weekly data
 router.get("/weekly", (req, res) => {
   const sql = `
