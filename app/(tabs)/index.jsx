@@ -25,7 +25,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.10.118:8000/api/water/sum")
+      .get("https://leafmebe-1.onrender.com/api/water/sum")
       .then((res) => {
         settotalWater(res.data);
       })
@@ -34,7 +34,10 @@ export default function HomeScreen() {
 
   const handleSubmit = () => {
     axios
-      .post("http://192.168.10.118:8000/api/water/insert", water_data)
+      .put(
+        "https://leafmebe-1.onrender.com/api/water/device-state/start",
+        water_data
+      )
       .then(() => {
         setSuccess(true);
         setWater("");
