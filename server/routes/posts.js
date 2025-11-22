@@ -26,6 +26,17 @@ router.get("/device-state", (req, res) => {
   });
 });
 
+router.put("/device-state/daily", (req, res) => {
+  const sql = "UPDATE device_state SET daily_watering = ? WHERE id = 1;";
+  const value = req.body.daily_watering;
+  db.query(sql, [value], (err, result) => {
+    if (err) {
+      return res.json(err);
+    }
+    res.json(result);
+  });
+});
+
 //app update device_state
 router.put("/device-state/start", (req, res) => {
   const target_ml = req.body.water;

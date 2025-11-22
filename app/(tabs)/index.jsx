@@ -4,7 +4,14 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
-import { Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import {
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  View,
+} from "react-native";
 import { Button, SegmentedButtons, Text } from "react-native-paper";
 import { articlesData } from "../Articles/Articlecontent";
 import Article from "../components/Article";
@@ -20,6 +27,7 @@ export default function HomeScreen() {
   const [totalWater, settotalWater] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
   const { signOut } = useAuth();
+  const [dailyWatering, setDailyWatering] = useState(false);
 
   const water_data = { water: Water };
 
@@ -41,6 +49,20 @@ export default function HomeScreen() {
       .then(() => {
         setSuccess(true);
         setWater("");
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const updateDailyWatering = (value) => {
+    const payload = { daily_watering: value ? 1 : 0 };
+
+    axios
+      .put(
+        "https://leafmebe-1.onrender.com/api/water/device-state/daily",
+        payload
+      )
+      .then(() => {
+        console.log("Daily watering updated:", payload);
       })
       .catch((err) => console.log(err));
   };
@@ -133,6 +155,20 @@ export default function HomeScreen() {
                     label: water,
                   }))}
                 />
+                <View style={styles.dailyRow}>
+                  <Text style={styles.dailyLabel}>Daily Watering</Text>
+                  <Switch
+                    value={dailyWatering}
+                    ios_backgroundColor="#444" // background color when OFF (iOS)
+                    trackColor={{ false: "#444", true: "#0044ff" }}
+                    thumbColor={dailyWatering ? "white" : "#888"}
+                    onValueChange={(value) => {
+                      setDailyWatering(value);
+
+                      updateDailyWatering(value);
+                    }}
+                  />
+                </View>
 
                 <Button
                   mode="contained"
@@ -284,5 +320,22 @@ const styles = StyleSheet.create({
     backgroundColor: "#0648ffff",
     borderRadius: 10,
     paddingHorizontal: 30,
+  },
+  dailyRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#2A2A2A",
+    paddingVertical: 14,
+    paddingHorizontal: 18,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "#3A3A3A",
+  },
+
+  dailyLabel: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
