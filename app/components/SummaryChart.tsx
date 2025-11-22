@@ -78,7 +78,9 @@ export default function SummaryChart({
 
   useEffect(() => {
     axios
-      .get(`http://192.168.10.118:8000/api/water/weekly?offset=${weekOffset}`)
+      .get(
+        `https://leafmebe-1.onrender.com/api/water/weekly?offset=${weekOffset}`
+      )
       .then((res) => {
         const sqlRows = res.data;
         console.log(sqlRows);
@@ -215,6 +217,7 @@ export default function SummaryChart({
                     backgroundColor: "#1f1f1f",
                     borderWidth: 1,
                     borderColor: "#00c97f",
+                    marginLeft: -20,
                   }}
                 >
                   <Text style={{ color: "white", fontWeight: "600" }}>
