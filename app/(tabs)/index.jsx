@@ -242,68 +242,35 @@ export default function HomeScreen() {
 
       <Modal
         visible={showDialog}
-        animationType="slide"
-        presentationStyle="overFullScreen"
+        animationType="fade"
         transparent={true}
         onRequestClose={() => setShowDialog(false)}
       >
-        {/* Bottom sheet container */}
-
-        <Pressable onPress={() => setShowDialog(false)}>
-          <View
-            style={{
-              backgroundColor: "transparent",
-              height: "730",
-            }}
-          ></View>
+        {/* Fullscreen overlay */}
+        <Pressable style={styles.overlay} onPress={() => setShowDialog(false)}>
+          {/* empty area for tap outside */}
         </Pressable>
 
-        <View
-          style={{
-            backgroundColor: "transparent",
-            paddingVertical: 20,
-            borderTopLeftRadius: 25,
-            borderTopRightRadius: 25,
-            marginRight: -15,
-            marginLeft: -15,
-          }}
-        >
-          {/* Log Out */}
+        {/* Bottom sheet */}
+        <View style={styles.bottomSheet}>
+          {/* Logout button */}
           <Button
             mode="contained"
             onPress={handleSignOut}
-            style={{
-              marginHorizontal: 20,
-              borderRadius: 12,
-              backgroundColor: "#2c2c2e",
-              borderWidth: 1,
-            }}
+            style={styles.logoutBtn}
             contentStyle={{ width: "100%" }}
-            labelStyle={{
-              fontSize: 18,
-              fontWeight: "700",
-              color: "#de3232ff",
-            }}
+            labelStyle={styles.logoutLabel}
           >
             Log Out
           </Button>
 
-          {/* Cancel */}
+          {/* Cancel button */}
           <Button
             mode="contained"
             onPress={() => setShowDialog(false)}
-            style={{
-              marginHorizontal: 20,
-              marginTop: 10,
-              borderRadius: 12,
-              backgroundColor: "#2c2c2e",
-            }}
+            style={styles.cancelBtn}
             contentStyle={{ width: "100%" }}
-            labelStyle={{
-              fontSize: 18,
-              fontWeight: "900",
-              color: "#548affff",
-            }}
+            labelStyle={styles.cancelLabel}
           >
             Cancel
           </Button>
@@ -364,5 +331,47 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "600",
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+  },
+
+  bottomSheet: {
+    backgroundColor: "rgba(0,0,0,0.4)",
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 20,
+  },
+
+  logoutBtn: {
+    borderRadius: 12,
+    backgroundColor: "#2c2c2e",
+    borderWidth: 1,
+    borderColor: "#3a3a3c",
+  },
+
+  logoutLabel: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#de3232ff",
+  },
+
+  cancelBtn: {
+    marginTop: 12,
+    borderRadius: 12,
+    backgroundColor: "#2c2c2e",
+  },
+
+  cancelLabel: {
+    fontSize: 18,
+    fontWeight: "800",
+    color: "#548affff",
   },
 });

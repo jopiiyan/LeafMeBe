@@ -57,7 +57,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="devices"
         options={{
-          title: "Profile",
+          title: "Devices",
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="devices" size={30} color={color} />
           ),
