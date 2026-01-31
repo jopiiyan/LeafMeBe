@@ -26,6 +26,19 @@ router.get("/device-state", (req, res) => {
   });
 });
 
+
+router.get("/device-state/status", (req, res) => {
+  const sql = "SELECT status from device_state WHERE id=1";
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.json(err);
+    }
+    res.json(result[0]);
+  });
+});
+
+
+
 router.put("/device-state/daily", (req, res) => {
   const sql = "UPDATE device_state SET daily_watering = ? WHERE id = 1;";
   const value = req.body.daily_watering;
