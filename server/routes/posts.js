@@ -39,15 +39,16 @@ router.get("/device-state/status", (req, res) => {
 
 
 
-router.put("/api/water/device-state/forget", async (req, res) => {
-  const { deviceId } = req.body;
+router.put("/api/water/device-state/forget", (req, res) => {
+  const sql = "UPDATE device_state SET reset_requested = 1 WHERE id =1";
 
- db.query("UPDATE device_state SET reset_requested = 1 WHERE id = 1"
-  
-  );
-
-  res.json({ success: true });
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.json(err);
+    }
+  });
 });
+
 
 
 
