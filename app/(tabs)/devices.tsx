@@ -22,7 +22,6 @@ interface Device {
   name: string;
   id: string;
   status: "Active" | "Inactive" | "Configuring";
-  ipAddress?: string;
   lastSeen?: string;
 }
 
@@ -66,7 +65,34 @@ export default function DevicesPage() {
       setIsLoading(false);
     }
   };
+ const forgetNetwork = async (deviceId: string) => {
+   Alert.alert(
+     "Forget WiFi",
+     "This will reset the device and erase its WiFi credentials.",
+     [
+       { text: "Cancel", style: "cancel" },
+       {
+         text: "Reset",
+         style: "destructive",
+         onPress: async () => {
+           try {
+             await axios.post(`${SERVER_BASE}/device/forget`, {
+               deviceId: deviceId,
+             });
 
+             Alert.alert(
+               "Reset Requested",
+               "The device will reset when it next syncs with the server.",
+             );
+           } catch (error) {
+             console.error(error);
+             Alert.alert("Error", "Unable to contact server.");
+           }
+         },
+       },
+     ],
+   );
+ };
   // Save devices to AsyncStorage
   const saveDevices = async (deviceList: Device[]) => {
     try {
@@ -133,9 +159,10 @@ export default function DevicesPage() {
     if (!deviceName || !deviceId) return;
 
     const newDevice: Device = {
-      name: deviceName,
-      id: deviceId,
+      name: "LeafMeBe Device",
+      id: `esp32_${Date.now()}`,
       status: "Inactive",
+  
     };
 
     const updatedDevices = [...devices, newDevice];
@@ -443,6 +470,16 @@ export default function DevicesPage() {
 
               {/* Action Buttons Row - Only Delete button */}
               <View style={styles.deviceActions}>
+                <Button
+                  mode="text"
+                  textColor="#ffaa00"
+                  compact
+                  icon="wifi-off"
+                  onPress={() => forgetNetwork(dev.id)}
+                >
+                  Forget WiFi
+                </Button>
+
                 <Button
                   mode="text"
                   textColor="#ff4444"
