@@ -76,8 +76,8 @@ export default function DevicesPage() {
          style: "destructive",
          onPress: async () => {
            try {
-             await axios.post(`${SERVER_BASE}/device/forget`, {
-               deviceId: deviceId,
+             await axios.put(`${SERVER_BASE}/device/forget`, {
+               deviceId: 1,
              });
 
              Alert.alert(
