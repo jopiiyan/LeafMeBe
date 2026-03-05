@@ -37,6 +37,8 @@ router.get("/device-state/status", (req, res) => {
   });
 });
 
+
+
 router.put("/api/water/device/forget", async (req, res) => {
   const { deviceId } = req.body;
 

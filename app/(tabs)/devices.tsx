@@ -76,7 +76,7 @@ export default function DevicesPage() {
          style: "destructive",
          onPress: async () => {
            try {
-             await axios.put(`${SERVER_BASE}/device/forget`, {
+             await axios.put(`${SERVER_BASE}/device-state/forget`, {
                deviceId: 1,
              });
 
@@ -93,6 +93,8 @@ export default function DevicesPage() {
      ],
    );
  };
+  
+  
   // Save devices to AsyncStorage
   const saveDevices = async (deviceList: Device[]) => {
     try {
