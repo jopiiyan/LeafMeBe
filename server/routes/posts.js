@@ -39,7 +39,7 @@ router.get("/device-state/status", (req, res) => {
 
 
 
-router.put("/device-state/clear-reset", (req, res) => {
+router.put("/device-state/forget", (req, res) => {
   const sql = "UPDATE device_state SET reset_requested = 1 WHERE id=1";
 
   db.query(sql, (err, result) => {
