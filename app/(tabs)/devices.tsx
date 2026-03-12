@@ -80,6 +80,8 @@ export default function DevicesPage() {
                deviceId: 1,
              });
 
+             
+
              Alert.alert(
                "Reset Requested",
                "The device will reset when it next syncs with the server.",
@@ -482,7 +484,8 @@ export default function DevicesPage() {
                   textColor="#ffaa00"
                   compact
                   icon="wifi-off"
-                  onPress={() => forgetNetwork(dev.id)}
+                  onPress={() => { forgetNetwork(dev.id); deleteDevice(dev.id, dev.name) }
+                  }
                 >
                   Forget WiFi
                 </Button>
