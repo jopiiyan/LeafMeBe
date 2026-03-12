@@ -206,6 +206,11 @@ export default function DevicesPage() {
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 3000));
+      await axios.put(`${SERVER_BASE}/device-state/forget`, {
+               deviceId: 0,
+             });
+
+
 
       Alert.alert(
         "Configuration Complete",
