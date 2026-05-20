@@ -12,13 +12,13 @@ Awarded **SGD $2,000 in funding** and the **Sustainability Spirit Award** by SUT
 
 ---
 
-## ✨ Overview
+## Overview
 
 LeafMeBe is a full-stack IoT system that combines a mobile app, a cloud backend, and a microcontroller-driven hardware unit to **harvest atmospheric humidity into usable water** and dispense it to plants on demand or on schedule.
 
 The system is designed for sustainability — reducing reliance on tap water for indoor plants by extracting moisture from the air using a Peltier-cooled cold plate.
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```
    ┌────────────────────┐
@@ -57,7 +57,7 @@ The system is designed for sustainability — reducing reliance on tap water for
 
 ---
 
-## 🔧 How It Works
+## How It Works
 
 ### 1. First-Time Device Setup (Wi-Fi Provisioning)
 The ESP32 boots into **Access Point mode** and hosts a captive portal:
@@ -97,7 +97,7 @@ Using a polling-based queue (rather than persistent connections) keeps the firmw
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 **Mobile**
 - Expo SDK 54 with Expo Router (file-based routing)
@@ -124,7 +124,7 @@ Using a polling-based queue (rather than persistent connections) keeps the firmw
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js ≥ 18
@@ -172,7 +172,7 @@ Open the firmware sketch in Arduino IDE, install the required libraries (`WiFi.h
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 LeafMeBe/
@@ -187,7 +187,7 @@ LeafMeBe/
 
 ---
 
-## 🌍 Sustainability Impact
+## Sustainability Impact
 
 LeafMeBe directly addresses water-conservation goals:
 - **Atmospheric water harvesting** reduces reliance on tap or bottled water for plant care
