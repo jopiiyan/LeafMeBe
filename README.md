@@ -34,9 +34,9 @@ The system is designed for sustainability — reducing reliance on tap water for
                 ▼                 ▲ (polls)
         ┌──────────────┐    ┌─────────┐
         │ cPanel MySQL │◄───┤  ESP32  │
-        │   Database   │    │  + DHT  │
-        └──────────────┘    │ + Peltier│
-                            │  + Pump  │
+        │   Database   │    │         |  
+        └──────────────┘    │         |
+                            │         │
                             └─────────┘
 ```
 
