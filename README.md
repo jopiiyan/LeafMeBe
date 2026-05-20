@@ -197,24 +197,3 @@ LeafMeBe directly addresses water-conservation goals:
 These principles earned the project the **Sustainability Spirit Award** at SUTD.
 
 ---
-
-## 🗺️ Roadmap
-
-- [ ] Add scheduled dispensing (cron-like rules)
-- [ ] Push notifications when reservoir is low
-- [ ] Multi-device support per user account
-- [ ] Soil-moisture sensor integration for closed-loop watering
-- [ ] Migrate command transport from polling to MQTT or WebSocket for lower latency
-- [ ] Android build via Expo
-
----
-
-## 👥 Authors
-
-Built as a student project at the **Singapore University of Technology and Design (SUTD)**.
-
----
-
-## 📄 License
-
-This project is currently unlicensed and intended for academic showcase. Contact the authors before reuse.
