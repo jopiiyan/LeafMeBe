@@ -82,7 +82,7 @@ The ESP32 drives a **Peltier thermoelectric cooler** that creates a cold surface
    ESP32 polls GET /api/commands/:device_id every N seconds
             │
             ▼
-   ESP32 picks up pending command → activates pump → logs result
+   ESP32 picks up pending command → activates peltier → dispenses water → logs result
             │
             ▼
    ESP32 → PATCH /api/commands/:id (status: completed)
