@@ -48,7 +48,7 @@ The system is designed for sustainability — reducing reliance on tap water for
 | **Authentication** | Appwrite | User signup, login, session management |
 | **Backend API** | Node.js + Express.js | Command queue, device registry, water-log history |
 | **Database** | MySQL (hosted on cPanel) | Persists users, devices, dispense logs, sensor readings |
-| **Hardware** | ESP32 + DHT humidity sensor + Peltier cooler + water pump | Harvests water from air, dispenses on command |
+| **Hardware** | ESP32 + Peltier | Harvests water from air, dispenses on command |
 
 ---
 
