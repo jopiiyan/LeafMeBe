@@ -2,11 +2,6 @@
 
 > An IoT-powered self-watering plant system that **harvests water from ambient humidity** and automates plant irrigation — controlled from an iOS app.
 
-[![Award](https://img.shields.io/badge/Award-Sustainability%20Spirit%20Award-green)]()
-[![Funding](https://img.shields.io/badge/Funding-SGD%20%242%2C000-blue)]()
-[![Platform](https://img.shields.io/badge/Platform-iOS-lightgrey)]()
-[![Stack](https://img.shields.io/badge/Stack-Expo%20%7C%20TypeScript%20%7C%20Express%20%7C%20MySQL%20%7C%20ESP32-orange)]()
-
 **Singapore University of Technology and Design — Oct 2025 to Present**
 Awarded **SGD $2,000 in funding** and the **Sustainability Spirit Award** by SUTD.
 
