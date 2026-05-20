@@ -1,50 +1,220 @@
-# Welcome to your Expo app 👋
+# 🌱 LeafMeBe
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> An IoT-powered self-watering plant system that **harvests water from ambient humidity** and automates plant irrigation — controlled from an iOS app.
 
-## Get started
+[![Award](https://img.shields.io/badge/Award-Sustainability%20Spirit%20Award-green)]()
+[![Funding](https://img.shields.io/badge/Funding-SGD%20%242%2C000-blue)]()
+[![Platform](https://img.shields.io/badge/Platform-iOS-lightgrey)]()
+[![Stack](https://img.shields.io/badge/Stack-Expo%20%7C%20TypeScript%20%7C%20Express%20%7C%20MySQL%20%7C%20ESP32-orange)]()
 
-1. Install dependencies
+**Singapore University of Technology and Design — Oct 2025 to Present**
+Awarded **SGD $2,000 in funding** and the **Sustainability Spirit Award** by SUTD.
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+## ✨ Overview
 
-   ```bash
-   npx expo start
-   ```
+LeafMeBe is a full-stack IoT system that combines a mobile app, a cloud backend, and a microcontroller-driven hardware unit to **harvest atmospheric humidity into usable water** and dispense it to plants on demand or on schedule.
 
-In the output, you'll find options to open the app in a
+The system is designed for sustainability — reducing reliance on tap water for indoor plants by extracting moisture from the air using a Peltier-cooled cold plate.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🏗️ System Architecture
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+   ┌────────────────────┐
+   │   iOS App (Expo)   │
+   │  React Native + TS │
+   └─────────┬──────────┘
+             │
+   ┌─────────┴──────────┐
+   │                    │
+   ▼                    ▼
+┌──────────┐    ┌────────────────┐
+│ Appwrite │    │ Express.js API │
+│  (Auth)  │    │     (Node)     │
+└──────────┘    └────────┬───────┘
+                         │
+                ┌────────┴────────┐
+                │                 │
+                ▼                 ▲ (polls)
+        ┌──────────────┐    ┌─────────┐
+        │ cPanel MySQL │◄───┤  ESP32  │
+        │   Database   │    │  + DHT  │
+        └──────────────┘    │ + Peltier│
+                            │  + Pump  │
+                            └─────────┘
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Component breakdown
 
-## Learn more
+| Layer | Tech | Responsibility |
+|---|---|---|
+| **Mobile App** | Expo (React Native) + TypeScript | UI, device control, scheduling, real-time status |
+| **Authentication** | Appwrite | User signup, login, session management |
+| **Backend API** | Node.js + Express.js | Command queue, device registry, water-log history |
+| **Database** | MySQL (hosted on cPanel) | Persists users, devices, dispense logs, sensor readings |
+| **Hardware** | ESP32 + DHT humidity sensor + Peltier cooler + water pump | Harvests water from air, dispenses on command |
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 🔧 How It Works
 
-## Join the community
+### 1. First-Time Device Setup (Wi-Fi Provisioning)
+The ESP32 boots into **Access Point mode** and hosts a captive portal:
 
-Join our community of developers creating universal apps.
+1. User connects their phone to the `LeafMeBe-XXXX` Wi-Fi network
+2. A local web page automatically opens for entering home Wi-Fi credentials
+3. ESP32 stores credentials in flash memory and switches to Station mode
+4. Device connects to the home network and registers itself with the backend
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This pattern eliminates hardcoded credentials and allows non-technical users to onboard new devices without reflashing.
+
+### 2. Water Harvesting
+The ESP32 drives a **Peltier thermoelectric cooler** that creates a cold surface. Ambient humid air condenses into liquid water on the cold plate, which is collected in an onboard reservoir. A DHT sensor monitors humidity to estimate harvest rate.
+
+### 3. Dispensing Command Flow
+
+```
+   User taps "Dispense 50ml" in the iOS app
+            │
+            ▼
+   App → POST /api/commands → Express server
+            │
+            ▼
+   Express writes command row to MySQL (status: pending)
+            │
+            ▼
+   ESP32 polls GET /api/commands/:device_id every N seconds
+            │
+            ▼
+   ESP32 picks up pending command → activates pump → logs result
+            │
+            ▼
+   ESP32 → PATCH /api/commands/:id (status: completed)
+```
+
+Using a polling-based queue (rather than persistent connections) keeps the firmware simple and tolerant of brief network disruptions.
+
+---
+
+## 🛠️ Tech Stack
+
+**Mobile**
+- Expo SDK 54 with Expo Router (file-based routing)
+- React Native 0.81 + React 19
+- TypeScript
+- React Navigation (bottom tabs)
+- React Native Paper (UI components)
+- react-native-gifted-charts (data visualisation)
+- Expo Haptics (tactile feedback)
+- AsyncStorage (local persistence)
+- Axios (HTTP client)
+
+**Backend**
+- Node.js + Express.js
+- MySQL (cPanel hosted)
+- Appwrite (auth)
+
+**Hardware / Firmware**
+- ESP32 microcontroller
+- DHT humidity & temperature sensor
+- Peltier thermoelectric module
+- Water pump + relay
+- Arduino IDE / C++
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js ≥ 18
+- npm or yarn
+- Expo Go app on iPhone (for development) **or** EAS Build for standalone iOS builds
+- Access to an Appwrite project (cloud or self-hosted)
+- A MySQL database (we use cPanel hosting)
+- ESP32 development board with Arduino IDE configured
+
+### 1. Clone the repo
+```bash
+git clone https://github.com/jopiiyan/LeafMeBe.git
+cd LeafMeBe
+```
+
+### 2. Install mobile app dependencies
+```bash
+npm install
+```
+
+### 3. Configure environment
+Create a `.env` file in the project root:
+```env
+EXPO_PUBLIC_APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
+EXPO_PUBLIC_APPWRITE_PROJECT_ID=<your-project-id>
+EXPO_PUBLIC_API_BASE_URL=https://<your-server>.com/api
+```
+
+### 4. Start the mobile app
+```bash
+npx expo start
+```
+Then scan the QR code with the Expo Go app on your iPhone.
+
+### 5. Run the backend
+```bash
+cd server
+npm install
+npm start
+```
+Make sure your MySQL credentials are set in `server/.env`.
+
+### 6. Flash the ESP32
+Open the firmware sketch in Arduino IDE, install the required libraries (`WiFi.h`, `WebServer.h`, `DHT sensor library`, `HTTPClient.h`), then upload to your ESP32 board.
+
+---
+
+## 📁 Project Structure
+
+```
+LeafMeBe/
+├── app/              # Expo Router screens (file-based routing)
+├── assets/           # Images, icons, fonts
+├── lib/              # Shared TypeScript modules (API client, helpers)
+├── server/           # Node.js + Express backend
+├── app.json          # Expo configuration
+├── package.json
+└── tsconfig.json
+```
+
+---
+
+## 🌍 Sustainability Impact
+
+LeafMeBe directly addresses water-conservation goals:
+- **Atmospheric water harvesting** reduces reliance on tap or bottled water for plant care
+- **Precise dispensing volumes** (set per-plant in the app) prevent overwatering
+- **Automated scheduling** ensures plants are watered only when needed, even when the owner is away
+
+These principles earned the project the **Sustainability Spirit Award** at SUTD.
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Add scheduled dispensing (cron-like rules)
+- [ ] Push notifications when reservoir is low
+- [ ] Multi-device support per user account
+- [ ] Soil-moisture sensor integration for closed-loop watering
+- [ ] Migrate command transport from polling to MQTT or WebSocket for lower latency
+- [ ] Android build via Expo
+
+---
+
+## 👥 Authors
+
+Built as a student project at the **Singapore University of Technology and Design (SUTD)**.
+
+---
+
+## 📄 License
+
+This project is currently unlicensed and intended for academic showcase. Contact the authors before reuse.
